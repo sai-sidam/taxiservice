@@ -1,23 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 function Home() {
+  const [viewportWidth, setViewportWidth] = useState(
+    typeof window === 'undefined' ? 1280 : window.innerWidth
+  );
+
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = viewportWidth < 768;
+  const isTablet = viewportWidth >= 768 && viewportWidth < 1024;
+  const isCompact = viewportWidth < 1024;
+
   return (
-    <div style={{ backgroundColor: '#0a0a0a', color: 'white', fontFamily: 'Arial, sans-serif' }}>
+    <div id="top" style={{ backgroundColor: '#0a0a0a', color: 'white', fontFamily: 'Arial, sans-serif' }}>
       {/* Header */}
       <header style={{
-        padding: '1.5rem 3rem',
+        padding: isMobile ? '1rem' : isTablet ? '1.25rem 2rem' : '1.5rem 3rem',
         display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: isMobile ? 'stretch' : 'center',
+        gap: isMobile ? '1rem' : 0,
         position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
         zIndex: 100
       }}>
-        <img src="/logo.png" alt="Ride With Carlos" style={{ height: '70px' }} />
-        <nav style={{ display: 'flex', gap: '2.5rem', fontSize: '0.9rem' }}>
-          <a href="#" style={{ color: 'white', textDecoration: 'none' }}>Home</a>
+        <img src="/logo.png" alt="Ride With Carlos" style={{ height: isMobile ? '52px' : '70px', alignSelf: isMobile ? 'flex-start' : 'auto' }} />
+        <nav style={{ display: 'flex', gap: isMobile ? '1rem' : '2.5rem', fontSize: '0.9rem', flexWrap: 'wrap' }}>
+          <a href="#top" style={{ color: 'white', textDecoration: 'none' }}>Home</a>
           <a href="#services" style={{ color: 'white', textDecoration: 'none' }}>Services</a>
           <a href="#vehicles" style={{ color: 'white', textDecoration: 'none' }}>Vehicles</a>
           <a href="#about" style={{ color: 'white', textDecoration: 'none' }}>About</a>
@@ -31,7 +47,8 @@ function Home() {
           cursor: 'pointer',
           fontSize: '0.9rem',
           fontWeight: '600',
-          textDecoration: 'none'
+          textDecoration: 'none',
+          alignSelf: isMobile ? 'flex-start' : 'auto'
         }}>
           📞 Call Now
         </a>
@@ -44,20 +61,20 @@ function Home() {
         background: 'linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0.4)), url(https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=2070) center/cover',
         display: 'flex',
         alignItems: 'center',
-        padding: '80px 3rem'
+        padding: isMobile ? '220px 1rem 40px' : isTablet ? '120px 2rem 60px' : '80px 3rem'
       }}>
         <div style={{
           maxWidth: '1400px',
           margin: '0 auto',
           width: '100%',
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '4rem',
+          gridTemplateColumns: isCompact ? '1fr' : '1fr 1fr',
+          gap: isMobile ? '2rem' : '4rem',
           alignItems: 'center'
         }}>
           <div>
             <h1 style={{
-              fontSize: '3.5rem',
+              fontSize: isMobile ? '2.1rem' : isTablet ? '2.8rem' : '3.5rem',
               fontWeight: '700',
               lineHeight: '1.2',
               marginBottom: '1rem',
@@ -66,14 +83,14 @@ function Home() {
               Reliable Rides. Right on Time.
             </h1>
             <p style={{
-              fontSize: '1.2rem',
+              fontSize: isMobile ? '1.05rem' : '1.2rem',
               opacity: 0.9,
               marginBottom: '2rem',
               lineHeight: '1.6'
             }}>
               Airport transfers, home pickups, group trips, and long-distance rides — always safe, comfortable, and on schedule.
             </p>
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
               <a href="tel:+15551234567" style={{
                 backgroundColor: '#FFC107',
                 color: '#0a0a0a',
@@ -108,7 +125,7 @@ function Home() {
           {/* Booking Form */}
           <div style={{
             backgroundColor: 'white',
-            padding: '2.5rem',
+            padding: isMobile ? '1.5rem' : '2.5rem',
             borderRadius: '12px',
             boxShadow: '0 10px 40px rgba(0,0,0,0.3)'
           }}>
@@ -141,7 +158,7 @@ function Home() {
                   fontSize: '1rem'
                 }}
               />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1rem' }}>
                 <input
                   type="date"
                   style={{
@@ -193,12 +210,12 @@ function Home() {
 
       {/* Services Section */}
       <section id="services" style={{
-        padding: '100px 3rem',
+        padding: isMobile ? '70px 1rem' : isTablet ? '80px 2rem' : '100px 3rem',
         backgroundColor: '#f8f8f8'
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <h2 style={{
-            fontSize: '2.5rem',
+            fontSize: isMobile ? '2rem' : '2.5rem',
             fontWeight: '700',
             textAlign: 'center',
             marginBottom: '1rem',
@@ -216,7 +233,7 @@ function Home() {
           </p>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
             gap: '2rem'
           }}>
             {[
@@ -248,12 +265,12 @@ function Home() {
 
       {/* Our Vehicles Section */}
       <section id="vehicles" style={{
-        padding: '100px 3rem',
+        padding: isMobile ? '70px 1rem' : isTablet ? '80px 2rem' : '100px 3rem',
         backgroundColor: 'white'
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <h2 style={{
-            fontSize: '2.5rem',
+            fontSize: isMobile ? '2rem' : '2.5rem',
             fontWeight: '700',
             textAlign: 'center',
             marginBottom: '3rem',
@@ -263,7 +280,7 @@ function Home() {
           </h2>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
             gap: '2rem'
           }}>
             {[
@@ -298,7 +315,7 @@ function Home() {
 
       {/* About Section */}
       <section id="about" style={{
-        padding: '100px 3rem',
+        padding: isMobile ? '70px 1rem' : isTablet ? '80px 2rem' : '100px 3rem',
         backgroundColor: '#0a0a0a',
         color: 'white'
       }}>
@@ -306,8 +323,8 @@ function Home() {
           maxWidth: '1400px',
           margin: '0 auto',
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '4rem',
+          gridTemplateColumns: isCompact ? '1fr' : '1fr 1fr',
+          gap: isMobile ? '2rem' : '4rem',
           alignItems: 'center'
         }}>
           <div>
@@ -319,7 +336,7 @@ function Home() {
           </div>
           <div>
             <h2 style={{
-              fontSize: '2.5rem',
+              fontSize: isMobile ? '2rem' : '2.5rem',
               fontWeight: '700',
               marginBottom: '1.5rem'
             }}>
@@ -335,7 +352,7 @@ function Home() {
               We offer wheelchair-accessible rides, car seats for families, and long-distance group trips. 
               Our customers trust us because we don't cut corners, and our goal is 100% satisfaction on every ride.
             </p>
-            <div style={{ display: 'flex', gap: '3rem', marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', gap: isMobile ? '1.5rem' : '3rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
               <div>
                 <div style={{ fontSize: '2.5rem', fontWeight: '700', color: '#FFC107' }}>11+</div>
                 <div style={{ fontSize: '0.95rem', opacity: 0.8 }}>Years of Service</div>
@@ -355,12 +372,12 @@ function Home() {
 
       {/* Testimonials Section */}
       <section style={{
-        padding: '100px 3rem',
+        padding: isMobile ? '70px 1rem' : isTablet ? '80px 2rem' : '100px 3rem',
         backgroundColor: '#f8f8f8'
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <h2 style={{
-            fontSize: '2.5rem',
+            fontSize: isMobile ? '2rem' : '2.5rem',
             fontWeight: '700',
             textAlign: 'center',
             marginBottom: '1rem',
@@ -378,7 +395,7 @@ function Home() {
           </p>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
             gap: '2rem'
           }}>
             {[
@@ -417,12 +434,12 @@ function Home() {
 
       {/* CTA Section */}
       <section id="contact" style={{
-        padding: '100px 3rem',
+        padding: isMobile ? '70px 1rem' : isTablet ? '80px 2rem' : '100px 3rem',
         background: 'linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.5)), url(https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=2070) center/cover',
         textAlign: 'center'
       }}>
         <h2 style={{
-          fontSize: '3rem',
+          fontSize: isMobile ? '2rem' : '3rem',
           fontWeight: '700',
           marginBottom: '1rem'
         }}>
@@ -435,14 +452,14 @@ function Home() {
         }}>
           Book your ride today - call or text us now
         </p>
-        <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href="tel:+15551234567" style={{
             backgroundColor: '#FFC107',
             color: '#0a0a0a',
-            padding: '1.2rem 3rem',
+            padding: isMobile ? '1rem 1.5rem' : '1.2rem 3rem',
             border: 'none',
             borderRadius: '8px',
-            fontSize: '1.1rem',
+            fontSize: isMobile ? '1rem' : '1.1rem',
             fontWeight: '700',
             cursor: 'pointer',
             textDecoration: 'none',
@@ -453,10 +470,10 @@ function Home() {
           <a href="https://wa.me/15551234567" target="_blank" rel="noopener noreferrer" style={{
             backgroundColor: '#25D366',
             color: 'white',
-            padding: '1.2rem 3rem',
+            padding: isMobile ? '1rem 1.5rem' : '1.2rem 3rem',
             border: 'none',
             borderRadius: '8px',
-            fontSize: '1.1rem',
+            fontSize: isMobile ? '1rem' : '1.1rem',
             fontWeight: '700',
             cursor: 'pointer',
             textDecoration: 'none',
@@ -470,15 +487,15 @@ function Home() {
       {/* Footer */}
       <footer style={{
         backgroundColor: '#0a0a0a',
-        padding: '60px 3rem 30px',
+        padding: isMobile ? '50px 1rem 24px' : isTablet ? '60px 2rem 30px' : '60px 3rem 30px',
         borderTop: '1px solid rgba(255,255,255,0.1)'
       }}>
         <div style={{
           maxWidth: '1400px',
           margin: '0 auto',
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '3rem',
+          gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+          gap: isMobile ? '2rem' : '3rem',
           marginBottom: '3rem'
         }}>
           <div>
